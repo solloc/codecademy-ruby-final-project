@@ -1,6 +1,6 @@
 module Menu
 	def menu
-		"1) Add\n2) Show\n3) Delete\n4) Write to file\n5) Read from file\nQ) Quit"
+		"1) Add\n2) Show\n3) Delete\n4) Update\n5) Write to file\n6) Read from file\nQ) Quit"
 	end
 
 	def show
@@ -29,6 +29,10 @@ class List
 
 	def delete(id)
 		all_tasks.delete_at(id - 1)
+	end
+
+	def update(id, task)
+		all_tasks[id-1] = task
 	end
 
 	def write_to_file(filename)
@@ -75,10 +79,16 @@ if __FILE__ == $PROGRAM_NAME
 				puts my_list.show
 				id_to_delete = prompt("select task\n").to_i
 				my_list.delete(id_to_delete)
-			when "4"					
+			when "4"
+				puts my_list.show
+				id_to_update = prompt("Which task to update\n").to_i
+				new_task = Task.new(prompt("description"))
+				my_list.update(id_to_update, new_task)
+				puts my_list.show
+			when "5"					
 				filename = prompt("filename: \n")
 				my_list.write_to_file(filename)
-			when "5"
+			when "6"
 				filename = prompt("filename: \n")
 				begin
 					my_list.read_from_file(filename)
