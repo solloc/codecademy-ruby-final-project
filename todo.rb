@@ -1,6 +1,6 @@
 module Menu
 	def menu
-		"1) Add\n2) Show\n3) Delete\n4) Update\n5) Write to file\n6) Read from file\nQ) Quit"
+		"1) Add\n2) Show\n3) Delete\n4) Update\n5) Write to file\n6) Read from file\n7) Toggle status\nQ) Quit"
 	end
 
 	def show
@@ -35,6 +35,10 @@ class List
 		all_tasks[id-1] = task
 	end
 
+	def toggle(id)
+		@all_tasks[id-1].toggle_status
+	end
+
 	def write_to_file(filename)
 		machinified = @all_tasks.map(&:to_machine).join("\n")
 		IO.write(filename, machinified)
@@ -65,7 +69,7 @@ class Task
 	end
 
 	def to_s
-		description
+		represent_status + ":" + description
 	end
 
 	def completed?
@@ -74,6 +78,10 @@ class Task
 
 	def to_machine
 		represent_status + ":" + description
+	end
+
+	def toggle_status
+		@status = !@status
 	end
 
 	private
@@ -116,6 +124,11 @@ if __FILE__ == $PROGRAM_NAME
 				rescue Errno::ENOENT => e
 					puts "file not found"
 				end				
+			when "7"
+				puts my_list.show
+				task_to_toggle = prompt("Task number to toggle?").to_i
+				my_list.toggle(task_to_toggle)
+				puts my_list.show
 			else
 				puts "Sorry, I did not understand"				
 		end	
