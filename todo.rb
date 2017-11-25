@@ -1,6 +1,6 @@
 module Menu
 	def menu
-		"1) Add\n2) Show\n3) Write to file\n4) Read from file\nQ) Quit"
+		"1) Add\n2) Show\n3) Delete\n4) Write to file\n5) Read from file\nQ) Quit"
 	end
 
 	def show
@@ -27,6 +27,10 @@ class List
 		all_tasks << task
 	end
 
+	def delete(id)
+		all_tasks.delete_at(id - 1)
+	end
+
 	def write_to_file(filename)
 		IO.write(filename, @all_tasks.map(&:to_s).join("\n"))
 	end
@@ -38,7 +42,7 @@ class List
 	end
 
 	def show
-		all_tasks
+		all_tasks.map.with_index { |l, i| "(#{i.next}): #{l}"}
 	end
 end
 
@@ -67,10 +71,14 @@ if __FILE__ == $PROGRAM_NAME
 				my_list.add(my_task)
 			when "2"
 				puts my_list.show
-			when "3"					
+			when "3"
+				puts my_list.show
+				id_to_delete = prompt("select task\n").to_i
+				my_list.delete(id_to_delete)
+			when "4"					
 				filename = prompt("filename: \n")
 				my_list.write_to_file(filename)
-			when "4"
+			when "5"
 				filename = prompt("filename: \n")
 				begin
 					my_list.read_from_file(filename)
