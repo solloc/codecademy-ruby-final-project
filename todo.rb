@@ -1,6 +1,6 @@
 module Menu
 	def menu
-		"1) Add\n2) Show\n3) Write to file\nQ) Quit"
+		"1) Add\n2) Show\n3) Write to file\n4) Read from file\nQ) Quit"
 	end
 
 	def show
@@ -29,6 +29,12 @@ class List
 
 	def write_to_file(filename)
 		IO.write(filename, @all_tasks.map(&:to_s).join("\n"))
+	end
+
+	def read_from_file(filename)
+		IO.readlines(filename).each do |line|
+			add(Task.new(line.chomp))
+		end
 	end
 
 	def show
@@ -64,6 +70,13 @@ if __FILE__ == $PROGRAM_NAME
 			when "3"					
 				filename = prompt("filename: \n")
 				my_list.write_to_file(filename)
+			when "4"
+				filename = prompt("filename: \n")
+				begin
+					my_list.read_from_file(filename)
+				rescue Errno::ENOENT => e
+					puts "file not found"
+				end				
 			else
 				puts "Sorry, I did not understand"				
 		end	
